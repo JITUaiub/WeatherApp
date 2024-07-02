@@ -1,10 +1,12 @@
 package com.nashid.weatherapp.dto;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.List;
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LocationResult {
-    List<Location> results;
-    Integer generationtime_ms;
+    private List<Location> results;
+    private Integer generationtime_ms;
 
     public LocationResult() {}
 

@@ -51,6 +51,15 @@
   background-color: #2396F3;
 }
 
+.clickable-link-text {
+  align-items: center;
+  color: #3c91e6;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 10px;
+  font-size: 18px;
+}
+
 /* Weather Preview */
 
 

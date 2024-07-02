@@ -1,7 +1,6 @@
 package com.nashid.weatherapp.views;
 
 import com.nashid.weatherapp.core.notification.NotificationUtils;
-import com.nashid.weatherapp.services.GreetService;
 import com.vaadin.cdi.annotation.CdiComponent;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;

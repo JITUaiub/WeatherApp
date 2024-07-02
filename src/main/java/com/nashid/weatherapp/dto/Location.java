@@ -3,6 +3,9 @@ package com.nashid.weatherapp.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Location {
     @JsonProperty("name")
@@ -12,6 +15,8 @@ public class Location {
     private String country;
     private String latitude;
     private String longitude;
+
+    private WeatherResult weatherResult;
 
     public Location() {}
 
@@ -61,5 +66,29 @@ public class Location {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public WeatherResult getWeatherResult() {
+        return weatherResult;
+    }
+
+    public void setWeatherResult(WeatherResult weatherResult) {
+        this.weatherResult = weatherResult;
+    }
+
+    public String getTemperature() {
+        return weatherResult.getCurrent().getTemperature_2m().toString().concat(" ").concat(weatherResult.getCurrent_units().getTemperature_2m());
+    }
+
+    public String getSurfaceWind() {
+        return weatherResult.getCurrent().getWind_speed_10m().toString().concat(" ").concat(weatherResult.getCurrent_units().getWind_speed_10m());
+    }
+
+    public String getRain() {
+        return weatherResult.getCurrent().getRain().toString().concat(" ").concat(weatherResult.getCurrent_units().getRain());
+    }
+
+    public String getLastUpdatedTime() {
+        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ssa").format(weatherResult.getCurrent().getTime());
     }
 }

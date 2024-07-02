@@ -8,12 +8,16 @@ import com.nashid.weatherapp.core.api.WeatherApi;
 import com.nashid.weatherapp.dto.Location;
 import com.nashid.weatherapp.dto.LocationResult;
 import com.nashid.weatherapp.views.DashboardView;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
+@Singleton
+@Startup
 public class LocationService {
 
     private Integer locationCount;
@@ -32,7 +36,7 @@ public class LocationService {
     }
 
     public Boolean getLoadMore() {
-        return loadMore;
+        return this.loadMore;
     }
 
     public void setLoadMore(Boolean loadMore) {
@@ -41,6 +45,9 @@ public class LocationService {
 
     public List<Location> getLocationList(String cityName, Integer maxResults) {
         maxResults++;
+        if (maxResults > 100) {
+            maxResults = 100;
+        }
         String locationData = ApiClient.callUrl(WeatherApi.GEO_API_SEARCH_URL.concat("?name=").concat(cityName).concat("&count=").concat(maxResults.toString()), HttpMethod.GET);
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -49,12 +56,13 @@ public class LocationService {
             if (locations.getResults() != null) {
                 if (locations.getResults().size() > getLocationCount()) {
                     List results = locations.getResults();
-                    Integer removeIndex = (results.size() - 1);
-                    results.remove(removeIndex);
-                    this.loadMore = true;
+                    System.out.println("List size 1: " + results.size());
+                    results.remove(results.size() - 1);
+                    this.setLoadMore(true);
+                    System.out.println("List size 2: " + results.size());
                     return results;
                 }
-                this.loadMore = false;
+                this.setLoadMore(false);
                 return locations.getResults();
             }
             return new ArrayList<>();
