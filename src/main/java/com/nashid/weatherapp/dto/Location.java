@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Location {
@@ -16,7 +15,7 @@ public class Location {
     private String latitude;
     private String longitude;
 
-    private WeatherResult weatherResult;
+    private CurrentWeatherResult weatherResult;
 
     public Location() {}
 
@@ -68,12 +67,16 @@ public class Location {
         this.longitude = longitude;
     }
 
-    public WeatherResult getWeatherResult() {
+    public CurrentWeatherResult getWeatherResult() {
         return weatherResult;
     }
 
-    public void setWeatherResult(WeatherResult weatherResult) {
+    public void setWeatherResult(CurrentWeatherResult weatherResult) {
         this.weatherResult = weatherResult;
+    }
+
+    public Integer getWeatherCode() {
+        return weatherResult.getCurrent().getWeather_code();
     }
 
     public String getTemperature() {
@@ -89,6 +92,6 @@ public class Location {
     }
 
     public String getLastUpdatedTime() {
-        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ssa").format(weatherResult.getCurrent().getTime());
+        return new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(weatherResult.getCurrent().getTime());
     }
 }

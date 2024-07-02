@@ -61,32 +61,8 @@
 }
 
 /* Weather Preview */
-
-
-.city-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.measurements {
-  margin-top: 10px;
-}
-
-.current-weather {
-  margin-top: 20px;
-}
-
 .week-forecast {
   margin-top: 20px;
-}
-
-.side-info {
-  list-style: none;
-  padding: 0;
-}
-
-.footer {
-  margin-top: 20px;
-  text-align: center;
+  overflow-y:scroll;
+  height: 1000px;
 }

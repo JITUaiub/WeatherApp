@@ -56,10 +56,8 @@ public class LocationService {
             if (locations.getResults() != null) {
                 if (locations.getResults().size() > getLocationCount()) {
                     List results = locations.getResults();
-                    System.out.println("List size 1: " + results.size());
                     results.remove(results.size() - 1);
                     this.setLoadMore(true);
-                    System.out.println("List size 2: " + results.size());
                     return results;
                 }
                 this.setLoadMore(false);

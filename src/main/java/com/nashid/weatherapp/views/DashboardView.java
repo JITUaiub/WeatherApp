@@ -9,11 +9,13 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
-import com.vaadin.flow.component.grid.FooterRow;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -22,8 +24,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.renderer.LitRenderer;
-import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import jakarta.inject.Inject;
@@ -86,14 +86,11 @@ public class DashboardView extends Div {
         //Weather Dialog
         // Create a dialog
         Dialog dialog = new Dialog();
-        dialog.setWidth("800px");
-        dialog.setHeight("600px");
+        dialog.setWidth("1000px");
+        dialog.setHeight("800px");
 
-        WeatherUpdateView weatherUpdateView = new WeatherUpdateView();
         Button closeButton = new Button("Close", event -> dialog.close());
-
         dialog.getFooter().add(closeButton);
-        dialog.add(weatherUpdateView);
 
         Grid<Location> grid = new Grid<>(Location.class, false);
         Grid.Column<Location> locationColumn = grid.addColumn(new ComponentRenderer<>(location -> {
@@ -102,7 +99,10 @@ public class DashboardView extends Div {
             Span countryCodeBadge = new Span(location.getCountryCode());
             countryCodeBadge.getElement().getThemeList().add("badge primary");
             locationLink.addClickListener(event -> {
-                dialog.setHeaderTitle("Weather forecast for " + location.getLocation());
+                dialog.removeAll();
+                WeatherUpdateView weatherUpdateView = new WeatherUpdateView(location, weatherService);
+                dialog.setHeaderTitle("Weather Forecast for " + location.getLocation());
+                dialog.add(weatherUpdateView);
                 dialog.open();
             });
             HorizontalLayout horizontalLayout = new HorizontalLayout(locationLink, countryCodeBadge);

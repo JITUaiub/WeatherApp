@@ -3,16 +3,16 @@ package com.nashid.weatherapp.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CurrentUnits {
+public class WeatherUnit {
     private String time;
     private String temperature_2m;
     private String wind_speed_10m;
     private String rain;
 
-    public CurrentUnits() {
+    public WeatherUnit() {
     }
 
-    public CurrentUnits(String time, String temperature_2m, String wind_speed_10m, String rain) {
+    public WeatherUnit(String time, String temperature_2m, String wind_speed_10m, String rain) {
         this.time = time;
         this.temperature_2m = temperature_2m;
         this.wind_speed_10m = wind_speed_10m;

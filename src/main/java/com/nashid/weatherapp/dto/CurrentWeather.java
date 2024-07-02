@@ -14,11 +14,13 @@ public class CurrentWeather {
     private Double temperature_2m;
     private Double wind_speed_10m;
     private Double rain;
+    private Integer weather_code;
 
     public CurrentWeather() {
     }
 
-    public CurrentWeather(Date time, Double temperature_2m, Double wind_speed_10m, Double rain) {
+    public CurrentWeather(Integer weather_code, Date time, Double temperature_2m, Double wind_speed_10m, Double rain) {
+        this.weather_code = weather_code;
         this.time = time;
         this.temperature_2m = temperature_2m;
         this.wind_speed_10m = wind_speed_10m;
@@ -55,5 +57,13 @@ public class CurrentWeather {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public Integer getWeather_code() {
+        return weather_code;
+    }
+
+    public void setWeather_code(Integer weather_code) {
+        this.weather_code = weather_code;
     }
 }

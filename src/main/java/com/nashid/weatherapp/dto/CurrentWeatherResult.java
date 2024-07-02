@@ -3,15 +3,15 @@ package com.nashid.weatherapp.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WeatherResult {
+public class CurrentWeatherResult {
     private Double elevation;
-    private CurrentUnits current_units;
+    private WeatherUnit current_units;
     private CurrentWeather current;
 
-    public WeatherResult() {
+    public CurrentWeatherResult() {
     }
 
-    public WeatherResult(Double elevation, CurrentUnits current_units, CurrentWeather current) {
+    public CurrentWeatherResult(Double elevation, WeatherUnit current_units, CurrentWeather current) {
         this.elevation = elevation;
         this.current_units = current_units;
         this.current = current;
@@ -25,11 +25,11 @@ public class WeatherResult {
         this.elevation = elevation;
     }
 
-    public CurrentUnits getCurrent_units() {
+    public WeatherUnit getCurrent_units() {
         return current_units;
     }
 
-    public void setCurrent_units(CurrentUnits current_units) {
+    public void setCurrent_units(WeatherUnit current_units) {
         this.current_units = current_units;
     }
 
