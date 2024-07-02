@@ -7,9 +7,12 @@
    Visit https://vaadin.com/docs-beta/latest/theming/application-theme/ for more information.
 */
 
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
 /* Locations */
 .location-view {
   background-color: #F5F5F5;
+  padding: 15px 60px 15px 60px;
 }
 
 .custom-grid-header::part(header-cell) {
@@ -20,28 +23,59 @@
   color: whitesmoke;
 }
 
+.custom-grid-header::part(body-row) {
+  text-align:center;
+  font-size:large;
+  margin-bottom: 30px;
+  background-color: #000000;
+}
+
+.custom-grid-header::part(body-cell) {
+  text-align:center;
+  font-size:large;
+  background-color: #FFFFFF;
+  padding: 10px 0px 10px 0px;
+}
+
 .custom-grid-header {
   height: 700px;
+  font-family: 'Lato';
 }
 
 .search-form {
   width: 100%;
-  padding: 0;
   background-color: #2396F3;
 }
 
-.search-form::content(vaadin-text-field) {
-  width: 100%;
-  background-color: #2396F3;
+.search-form-input {
+  width: 600px;
+  background-color: #42A5F6;
+  position: absolute;
+}
+
+.search-form-button {
+  background-color: #42A5F6;
+  position: relative;
+  margin-left: 558px;
+}
+
+#search-form-input-id::part(input-field) {
+  background-color: #42A5F6;
+  color: #FFFFFF;
+}
+
+#search-form-input-id::part(input-field) ::placeholder {
+  color: #FFFFFF;
 }
 
 .top-layout {
-  padding: 20px;
+  padding: 15px 60px 15px 60px;
   background-color: #2396F3;
 }
 
 .logo {
   color: #FFFFFF;
+  font-family: 'Raleway';
   font-weight: bold;
   font-size:30px;
 }

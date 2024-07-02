@@ -60,7 +60,6 @@ public class WeatherUpdateView extends VerticalLayout {
 
         HorizontalLayout weekForecastLayout = new HorizontalLayout();
         weekForecastLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        System.out.println("TESTTTT: " + hourlyForecast.size());
         for (Map forecast : hourlyForecast) {
             VerticalLayout hourlyForecastLayout = new VerticalLayout();
             hourlyForecastLayout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);

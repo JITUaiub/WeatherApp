@@ -42,7 +42,6 @@ public class DashboardView extends Div {
 
     @Inject
     public DashboardView(LocationService locationService, WeatherService weatherService) {
-        addClassName("location-view");
         locationService.setLocationCount(DEFAULT_LOCATION_PAGINATION_MAX);
         H3 noDataLabel = new H3("Your text doesn't match with any Address, City or Zip Code");
         H3 searchDataLabel = new H3("Please type a Address, City or Zip Code to get started");
@@ -57,8 +56,12 @@ public class DashboardView extends Div {
 
         //Top Layout - Part 2
         TextField cityTextField = new TextField();
+        cityTextField.addClassName("search-form-input");
         cityTextField.setPlaceholder("Search your Address, City or Zip Code");
+        cityTextField.setId("search-form-input-id");
+        cityTextField.getElement().setAttribute("style", "color: #FFFFFF;");
         Button searchButton = new Button();
+        searchButton.addClassName("search-form-button");
         searchButton.setIcon(VaadinIcon.SEARCH.create());
         HorizontalLayout layout2 = new HorizontalLayout(cityTextField, searchButton);
         layout2.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -84,9 +87,8 @@ public class DashboardView extends Div {
         add(topLayout);
 
         //Weather Dialog
-        // Create a dialog
         Dialog dialog = new Dialog();
-        dialog.setWidth("1000px");
+        dialog.setWidth("1200px");
         dialog.setHeight("800px");
 
         Button closeButton = new Button("Close", event -> dialog.close());
@@ -107,14 +109,14 @@ public class DashboardView extends Div {
             });
             HorizontalLayout horizontalLayout = new HorizontalLayout(locationLink, countryCodeBadge);
             return horizontalLayout;
-        })).setWidth("350px").setFlexGrow(0).setHeader("Location");
+        })).setWidth("250px").setFlexGrow(0).setHeader("Location");
         Grid.Column<Location> latitudeColumn = grid.addColumn(Location::getLatitude).setTextAlign(ColumnTextAlign.CENTER).setHeader("Latitude");
         Grid.Column<Location> longitudeColumn = grid.addColumn(Location::getLongitude).setTextAlign(ColumnTextAlign.CENTER).setHeader("Longitude");
         Grid.Column<Location> countryColumn = grid.addColumn(Location::getCountry).setTextAlign(ColumnTextAlign.CENTER).setHeader("Country");
         Grid.Column<Location> temperatureColumn = grid.addColumn(Location::getTemperature).setTextAlign(ColumnTextAlign.CENTER).setHeader("Temperature");
         Grid.Column<Location> surfaceWindColumn = grid.addColumn(Location::getSurfaceWind).setTextAlign(ColumnTextAlign.CENTER).setHeader("Surface Wind");
         Grid.Column<Location> rainColumn = grid.addColumn(Location::getRain).setTextAlign(ColumnTextAlign.CENTER).setHeader("Rain");
-        Grid.Column<Location> lastUpdatedColumn = grid.addColumn(Location::getLastUpdatedTime).setTextAlign(ColumnTextAlign.CENTER).setHeader("Last Updated");
+        Grid.Column<Location> lastUpdatedColumn = grid.addColumn(Location::getLastUpdatedTime).setTextAlign(ColumnTextAlign.CENTER).setHeader("Last Updated").setWidth("150px");
         Map<String, Grid.Column> components = new HashMap();
         components.put("locationColumn", locationColumn);
         components.put("latitudeColumn", latitudeColumn);
@@ -124,18 +126,21 @@ public class DashboardView extends Div {
         components.put("surfaceWindColumn", surfaceWindColumn);
         components.put("rainColumn", rainColumn);
         components.put("lastUpdatedColumn", lastUpdatedColumn);
-
+        grid.setClassNameGenerator(item -> "custom-grid-row");
+        grid.setId("custom-grid");
         Button loadMoreButton = new Button("Load more ...");
         loadMoreButton.setWidthFull();
-        HorizontalLayout horizontalLayout = new HorizontalLayout(loadMoreButton);
+        HorizontalLayout horizontalLayout3 = new HorizontalLayout(loadMoreButton);
         layout3.setAlignItems(FlexComponent.Alignment.CENTER);
         layout3.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         grid.addClassName("custom-grid-header");
-        add(searchDataLabel, noDataLabel, grid);
-        add(horizontalLayout);
+        HorizontalLayout horizontalLayout2 = new HorizontalLayout(searchDataLabel, noDataLabel, grid);
+        horizontalLayout2.addClassName("location-view");
+        add(horizontalLayout2);
+        add(horizontalLayout3);
 
         grid.setVisible(false);
-        horizontalLayout.setVisible(false);
+        horizontalLayout3.setVisible(false);
         loadMoreButton.addClickListener(buttonClickEvent1 -> {
             loadMoreButton.setEnabled(false);
             locationService.addLocationCount(DEFAULT_LOCATION_PAGINATION_MAX);
@@ -144,7 +149,7 @@ public class DashboardView extends Div {
                 location.setWeatherResult(weatherService.getCurrentWeather(location.getLatitude(), location.getLongitude()));
             });
             loadAndSetLocations(locations, grid, components, noDataLabel, searchDataLabel, locationService);
-            horizontalLayout.setVisible(locationService.getLoadMore());
+            horizontalLayout3.setVisible(locationService.getLoadMore());
             loadMoreButton.setEnabled(true);
         });
         searchButton.addClickListener(buttonClickEvent -> {
@@ -155,13 +160,13 @@ public class DashboardView extends Div {
                     location.setWeatherResult(weatherService.getCurrentWeather(location.getLatitude(), location.getLongitude()));
                 });
                 loadAndSetLocations(locations, grid, components, noDataLabel, searchDataLabel, locationService);
-                horizontalLayout.setVisible(locationService.getLoadMore());
+                horizontalLayout3.setVisible(locationService.getLoadMore());
             }
             else {
                 grid.setVisible(false);
                 noDataLabel.setVisible(false);
                 searchDataLabel.setVisible(true);
-                horizontalLayout.setVisible(false);
+                horizontalLayout3.setVisible(false);
             }
         });
     }
