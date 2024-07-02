@@ -1,4 +1,4 @@
-package org.vaadin.example;
+package com.nashid.weatherapp;
 
 import org.junit.Assert;
 import org.junit.Before;

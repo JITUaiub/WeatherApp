@@ -1,4 +1,4 @@
-package org.vaadin.example;
+package com.nashid.weatherapp.services;
 
 import jakarta.enterprise.context.ApplicationScoped;
 

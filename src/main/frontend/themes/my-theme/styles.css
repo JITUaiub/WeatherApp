@@ -7,14 +7,77 @@
    Visit https://vaadin.com/docs-beta/latest/theming/application-theme/ for more information.
 */
 
-/* Example: CSS class name to center align the content . */
-.centered-content {
-  margin: 0 auto;
-  max-width: 250px;
+/* Locations */
+.location-view {
+  background-color: #F5F5F5;
 }
 
-/* Example: the style is applied only to the textfields which have the `bordered` class name. */
-vaadin-text-field.bordered::part(input-field) {
-  box-shadow: inset 0 0 0 1px var(--lumo-contrast-30pct);
-  background-color: var(--lumo-base-color);
+.custom-grid-header::part(header-cell) {
+  text-align:center;
+  font-size:large;
+  padding:5px;
+  background-color: #2396F3;
+  color: whitesmoke;
+}
+
+.custom-grid-header {
+  height: 700px;
+}
+
+.search-form {
+  width: 100%;
+  padding: 0;
+  background-color: #2396F3;
+}
+
+.search-form::content(vaadin-text-field) {
+  width: 100%;
+  background-color: #2396F3;
+}
+
+.top-layout {
+  padding: 20px;
+  background-color: #2396F3;
+}
+
+.logo {
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size:30px;
+}
+
+.app-logo {
+  width: 500px;
+  background-color: #2396F3;
+}
+
+/* Weather Preview */
+
+
+.city-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.measurements {
+  margin-top: 10px;
+}
+
+.current-weather {
+  margin-top: 20px;
+}
+
+.week-forecast {
+  margin-top: 20px;
+}
+
+.side-info {
+  list-style: none;
+  padding: 0;
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: center;
 }
