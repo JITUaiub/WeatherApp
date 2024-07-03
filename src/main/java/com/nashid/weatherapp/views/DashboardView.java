@@ -6,6 +6,7 @@ import com.nashid.weatherapp.services.WeatherService;
 import com.nashid.weatherapp.views.filters.LocationFilter;
 import com.vaadin.cdi.annotation.CdiComponent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
@@ -43,8 +44,10 @@ public class DashboardView extends Div {
     @Inject
     public DashboardView(LocationService locationService, WeatherService weatherService) {
         locationService.setLocationCount(DEFAULT_LOCATION_PAGINATION_MAX);
-        H3 noDataLabel = new H3("Your text doesn't match with any Address, City or Zip Code");
-        H3 searchDataLabel = new H3("Please type a Address, City or Zip Code to get started");
+        Span noDataLabel = new Span("Your text doesn't match with any Address, City or Zip Code");
+        noDataLabel.addClassName("no-data-label");
+        Span searchDataLabel = new Span("Please type a Address, City or Zip Code to get started");
+        searchDataLabel.addClassName("no-data-label");
         noDataLabel.setVisible(false);
         //Top Layout - Part 1
         Span appName = new Span(LoginView.APPLICATION_NAME);
@@ -73,6 +76,9 @@ public class DashboardView extends Div {
         Icon settingIcon = VaadinIcon.COG_O.create();
         settingIcon.setColor("white");
         settingsButton.setIcon(settingIcon);
+        settingsButton.addClickListener(buttonClickEvent -> {
+           new SettingsView();
+        });
         Button userButton = new Button();
         Icon userIcon = VaadinIcon.USER.create();
         userIcon.setColor("white");
@@ -129,15 +135,21 @@ public class DashboardView extends Div {
         grid.setClassNameGenerator(item -> "custom-grid-row");
         grid.setId("custom-grid");
         Button loadMoreButton = new Button("Load more ...");
-        loadMoreButton.setWidthFull();
+        loadMoreButton.addClassName("load-more-button");
         HorizontalLayout horizontalLayout3 = new HorizontalLayout(loadMoreButton);
         layout3.setAlignItems(FlexComponent.Alignment.CENTER);
         layout3.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         grid.addClassName("custom-grid-header");
-        HorizontalLayout horizontalLayout2 = new HorizontalLayout(searchDataLabel, noDataLabel, grid);
+        HorizontalLayout horizontalLayout2 = new HorizontalLayout(grid);
         horizontalLayout2.addClassName("location-view");
+        horizontalLayout3.addClassName("pagination-view");
+        searchButton.addClickShortcut(Key.ENTER);
         add(horizontalLayout2);
         add(horizontalLayout3);
+
+        HorizontalLayout horizontalLayout4 = new HorizontalLayout(searchDataLabel, noDataLabel);
+        horizontalLayout4.addClassName("landing-view");
+        add(horizontalLayout4);
 
         grid.setVisible(false);
         horizontalLayout3.setVisible(false);
@@ -148,7 +160,7 @@ public class DashboardView extends Div {
             locations.forEach(location -> {
                 location.setWeatherResult(weatherService.getCurrentWeather(location.getLatitude(), location.getLongitude()));
             });
-            loadAndSetLocations(locations, grid, components, noDataLabel, searchDataLabel, locationService);
+            loadAndSetLocations(locations, grid, components, noDataLabel, searchDataLabel, locationService, horizontalLayout4, loadMoreButton);
             horizontalLayout3.setVisible(locationService.getLoadMore());
             loadMoreButton.setEnabled(true);
         });
@@ -159,7 +171,7 @@ public class DashboardView extends Div {
                 locations.forEach(location -> {
                     location.setWeatherResult(weatherService.getCurrentWeather(location.getLatitude(), location.getLongitude()));
                 });
-                loadAndSetLocations(locations, grid, components, noDataLabel, searchDataLabel, locationService);
+                loadAndSetLocations(locations, grid, components, noDataLabel, searchDataLabel, locationService, horizontalLayout4, loadMoreButton);
                 horizontalLayout3.setVisible(locationService.getLoadMore());
             }
             else {
@@ -167,11 +179,12 @@ public class DashboardView extends Div {
                 noDataLabel.setVisible(false);
                 searchDataLabel.setVisible(true);
                 horizontalLayout3.setVisible(false);
+                horizontalLayout4.setVisible(true);
             }
         });
     }
 
-    private static void loadAndSetLocations(List<Location> locations, Grid<Location> grid, Map<String, Grid.Column> components, H3 noDataLabel, H3 searchDataLabel, LocationService locationService) {
+    private static void loadAndSetLocations(List<Location> locations, Grid<Location> grid, Map<String, Grid.Column> components, Span noDataLabel, Span searchDataLabel, LocationService locationService, HorizontalLayout horizontalLayout4, Button loadMoreButton) {
         GridListDataView<Location> dataView = grid.setItems(locations);
         LocationFilter locationFilter = new LocationFilter(dataView);
 
@@ -196,11 +209,15 @@ public class DashboardView extends Div {
         if (locations != null && !locations.isEmpty()) {
             searchDataLabel.setVisible(false);
             noDataLabel.setVisible(false);
+            horizontalLayout4.setVisible(false);
+            loadMoreButton.setVisible(true);
             grid.setVisible(true);
         }
         else {
             searchDataLabel.setVisible(false);
             noDataLabel.setVisible(true);
+            horizontalLayout4.setVisible(true);
+            loadMoreButton.setVisible(false);
             grid.setVisible(false);
         }
     }
@@ -214,16 +231,15 @@ public class DashboardView extends Div {
         else {
             textField = new TextField();
         }
-        NativeLabel label = new NativeLabel(labelText);
-        label.getStyle().set("padding-top", "var(--lumo-space-m)")
-                .set("font-size", "var(--lumo-font-size-xs)");
         textField.setValueChangeMode(ValueChangeMode.EAGER);
         textField.setClearButtonVisible(true);
+        textField.setPlaceholder(labelText);
         textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         textField.setWidthFull();
         textField.getStyle().set("max-width", "100%");
+        textField.getStyle().set("color", "white");
         textField.addValueChangeListener(e -> filterChangeConsumer.accept(e.getValue()));
-        VerticalLayout layout = new VerticalLayout(label, textField);
+        VerticalLayout layout = new VerticalLayout(textField);
         layout.getThemeList().clear();
         layout.getThemeList().add("spacing-xs");
 

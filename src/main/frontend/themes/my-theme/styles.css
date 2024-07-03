@@ -8,11 +8,40 @@
 */
 
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 
 /* Locations */
+.no-data-label {
+  font-family: 'Roboto Condensed';
+  font-weight: lighter;
+  font-size: 48px;
+}
+
+.landing-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 80vh;
+}
+
 .location-view {
   background-color: #F5F5F5;
-  padding: 15px 60px 15px 60px;
+  padding: 0px 60px 15px 60px;
+}
+
+.load-more-button {
+  width: 150px;
+  background-color: #2396F3;
+  color: #FFFFFF;
+}
+
+.pagination-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #F5F5F5;
 }
 
 .custom-grid-header::part(header-cell) {
@@ -54,9 +83,15 @@
 }
 
 .search-form-button {
-  background-color: #42A5F6;
+  background-color: transparent;
   position: relative;
   margin-left: 558px;
+  color: #FFFFFF;
+
+}
+
+body {
+  background-color: #F5F5F5;
 }
 
 #search-form-input-id::part(input-field) {
