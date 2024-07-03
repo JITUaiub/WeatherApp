@@ -21,22 +21,16 @@ public class Bootstrap implements ServletContextListener {
 
     @PostConstruct
     public void init() {
-        System.out.println("Called Post cons...");
-        //userService.createImplementerLogin();
-        System.out.println("Implementer Login created...");
+        userService.createImplementerLogin();
     }
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        // Code to be executed at startup
         System.out.println("Application is starting up...");
-        System.out.println("Implementer Login created...");
-
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        // Code to be executed at shutdown (optional)
         System.out.println("Application is shutting down...");
     }
 }

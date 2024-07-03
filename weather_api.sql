@@ -19,7 +19,5 @@ CREATE TABLE IF NOT EXISTS `weather_app`.`settings` (
     wind_speed_unit VARCHAR(100) NOT NULL,
     precipitation_unit VARCHAR(100) NOT NULL,
     user_id BIGINT NOT NULL,
-    PRIMARY KEY (id),
-    CONSTRAINT FK_User FOREIGN KEY (user_id)
-    REFERENCES `weather_app`.`user`(id)
+    PRIMARY KEY (id)
 );

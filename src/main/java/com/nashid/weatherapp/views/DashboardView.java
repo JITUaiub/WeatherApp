@@ -2,11 +2,13 @@ package com.nashid.weatherapp.views;
 
 import com.nashid.weatherapp.dto.Location;
 import com.nashid.weatherapp.services.LocationService;
+import com.nashid.weatherapp.services.SettingsService;
 import com.nashid.weatherapp.services.WeatherService;
 import com.nashid.weatherapp.views.filters.LocationFilter;
 import com.vaadin.cdi.annotation.CdiComponent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
@@ -26,7 +28,10 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 import jakarta.inject.Inject;
 
 import java.util.HashMap;
@@ -36,13 +41,13 @@ import java.util.function.Consumer;
 
 @Route("dashboard")
 @CdiComponent
-public class DashboardView extends Div {
+public class DashboardView extends Div implements BeforeEnterObserver {
     public static final Integer DEFAULT_LOCATION_PAGINATION_MAX = 10;
 
     private static Map<String, TextField> filterHeaders = new HashMap<>();
 
     @Inject
-    public DashboardView(LocationService locationService, WeatherService weatherService) {
+    public DashboardView(LocationService locationService, WeatherService weatherService, SettingsService settingsService) {
         locationService.setLocationCount(DEFAULT_LOCATION_PAGINATION_MAX);
         Span noDataLabel = new Span("Your text doesn't match with any Address, City or Zip Code");
         noDataLabel.addClassName("no-data-label");
@@ -77,13 +82,17 @@ public class DashboardView extends Div {
         settingIcon.setColor("white");
         settingsButton.setIcon(settingIcon);
         settingsButton.addClickListener(buttonClickEvent -> {
-           new SettingsView();
+           new SettingsView(settingsService);
         });
-        Button userButton = new Button();
-        Icon userIcon = VaadinIcon.USER.create();
+        Button logoutButton = new Button();
+        Icon userIcon = VaadinIcon.SIGN_OUT.create();
         userIcon.setColor("white");
-        userButton.setIcon(userIcon);
-        HorizontalLayout layout3 = new HorizontalLayout(settingsButton, userButton);
+        logoutButton.setIcon(userIcon);
+        logoutButton.addClickListener(buttonClickEvent -> {
+            VaadinSession.getCurrent().setAttribute("LOGGED_IN_USER_ID", null);
+            UI.getCurrent().getPage().setLocation("login");
+        });
+        HorizontalLayout layout3 = new HorizontalLayout(settingsButton, logoutButton);
         layout3.setAlignItems(FlexComponent.Alignment.END);
         layout3.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 
@@ -244,5 +253,12 @@ public class DashboardView extends Div {
         layout.getThemeList().add("spacing-xs");
 
         return layout;
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        if (VaadinSession.getCurrent().getAttribute("LOGGED_IN_USER_ID") == null) {
+            beforeEnterEvent.forwardTo("login");
+        }
     }
 }

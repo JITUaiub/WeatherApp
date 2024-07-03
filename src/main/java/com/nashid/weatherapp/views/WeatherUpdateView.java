@@ -6,6 +6,9 @@ import com.nashid.weatherapp.services.WeatherService;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.server.VaadinSession;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WeatherUpdateView extends VerticalLayout {
+public class WeatherUpdateView extends VerticalLayout implements BeforeEnterObserver {
     private Image weatherCode;
     private Span dailyForecast;
     private Span currentTemperature;
@@ -23,25 +26,43 @@ public class WeatherUpdateView extends VerticalLayout {
 
     public WeatherUpdateView(Location location, WeatherService weatherService) {
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+        addClassName("weather-container");
 
         // Daily Forecast
+        VerticalLayout verticalLayout = new VerticalLayout();
         dailyForecast = new Span("Daily Forecast");
-        add(dailyForecast);
-        add(new Hr());
-        weatherCode = new Image(getWeatherCodeAsIconUrl(location.getWeatherCode(), "100"), getWeatherCodeAsTitle(location.getWeatherCode()));
-        add(weatherCode);
+        dailyForecast.addClassName("daily-forcast-title");
+        verticalLayout.add(dailyForecast);
+        Hr hr = new Hr();
+        hr.setClassName("custom-hr");
+        verticalLayout.add(hr);
+
+
+        VerticalLayout another = new VerticalLayout();
+        weatherCode = new Image(getWeatherCodeAsIconUrl(location.getWeatherCode(), "50"), getWeatherCodeAsTitle(location.getWeatherCode()));
+        another.add(weatherCode);
         currentTemperature = new Span(location.getTemperature());
-        currentWindSurface = new Span("Wind Surface: " + location.getSurfaceWind());
-        currentRain = new Span("Rain: " + location.getRain());
-        VerticalLayout todaysInfo = new VerticalLayout(currentTemperature, currentWindSurface, currentRain);
-        todaysInfo.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
-        add(todaysInfo);
-        add(new Hr());
+        currentTemperature.addClassName("daily-forcast-temparature");
+        another.add(currentTemperature);
+        currentWindSurface = new Span("Wind Surface : " + location.getSurfaceWind());
+        another.add(currentWindSurface);
+        currentRain = new Span("Rain         : " + location.getRain());
+        another.add(currentRain);
+        another.setAlignItems(Alignment.CENTER);
+        another.setJustifyContentMode(JustifyContentMode.CENTER);
+        verticalLayout.add(another);
+        add(verticalLayout);
+
 
         //Hourly Forecast
+        VerticalLayout verticalLayout1 = new VerticalLayout();
         hourlyForecast = new Span("Hourly Forecast");
-        add(hourlyForecast);
-        add(new Hr());
+        hourlyForecast.addClassName("daily-forcast-title");
+        verticalLayout1.add(hourlyForecast);
+        Hr hr2 = new Hr();
+        hr2.setClassName("custom-hr");
+        verticalLayout1.add(hr2);
+
 
         // 5-day forecast
         HourlyWeatherResult hourlyWeatherResult = weatherService.getHourlyWeather(location.getLatitude(), location.getLongitude());
@@ -58,23 +79,51 @@ public class WeatherUpdateView extends VerticalLayout {
             hourlyForecast.add(hourly);
         }
 
-        HorizontalLayout weekForecastLayout = new HorizontalLayout();
-        weekForecastLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        VerticalLayout weekForecastLayout = new VerticalLayout();
+
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         for (Map forecast : hourlyForecast) {
             VerticalLayout hourlyForecastLayout = new VerticalLayout();
             hourlyForecastLayout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+
+            Span span = new Span(forecast.get("temperature").toString());
+            span.setClassName("temparature");
+            span.setWidth("100px");
+
+            H3 h3 = new H3(forecast.get("time").toString());
+            h3.setWidth("100px");
+            h3.setHeight("50px");
+
+            Image image = new Image(forecast.get("weatherIconUrl").toString(), forecast.get("weatherTitle").toString());
+            image.setWidth("100px");
+            image.setHeight("80px");
+
+            Paragraph paragraph = new Paragraph(forecast.get("weatherTitle").toString());
+            paragraph.setWidth("100px");
+            paragraph.setHeight("50px");
+
+            Span span1 = new Span(forecast.get("surfaceWind").toString());
+            span1.setWidth("100px");
+
+            Span span2 = new Span(forecast.get("rain").toString());
+            span2.setWidth("100px");
+
             hourlyForecastLayout.add(
-                    new H3(forecast.get("time").toString()),
-                    new Image(forecast.get("weatherIconUrl").toString(), forecast.get("weatherTitle").toString()),
-                    new Paragraph(forecast.get("weatherTitle").toString()),
-                    new Span(forecast.get("temperature").toString()),
-                    new Span(forecast.get("surfaceWind").toString()),
-                    new Span(forecast.get("rain").toString())
+                    h3,
+                    image,
+                    paragraph,
+                    span,
+                    span1,
+                    span2
             );
-            weekForecastLayout.add(hourlyForecastLayout);
+            hourlyForecastLayout.setClassName("hourly-forecast");
+            horizontalLayout.add(hourlyForecastLayout);
         }
+        weekForecastLayout.add(horizontalLayout);
         weekForecastLayout.setClassName("week-forecast");
-        add(weekForecastLayout);
+        verticalLayout1.add(weekForecastLayout);
+        add(verticalLayout1);
     }
 
     public String getWeatherCodeAsIconUrl(Integer weatherCode, String size) {
@@ -199,5 +248,12 @@ public class WeatherUpdateView extends VerticalLayout {
                 return "Thunderstorm with Heavy Hail";
         }
         return "Unknown";
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        if (VaadinSession.getCurrent().getAttribute("LOGGED_IN_USER_ID") == null) {
+            beforeEnterEvent.forwardTo("login");
+        }
     }
 }

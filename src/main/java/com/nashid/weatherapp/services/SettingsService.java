@@ -1,32 +1,104 @@
 package com.nashid.weatherapp.services;
 
+import com.nashid.weatherapp.core.utils.DBConnectionManager;
 import com.nashid.weatherapp.domain.Settings;
+import com.nashid.weatherapp.domain.User;
+import com.nashid.weatherapp.enums.*;
+import com.vaadin.flow.server.VaadinSession;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @ApplicationScoped
 public class SettingsService {
 
-    public Settings getSettings() {
-        /*CoreEntityManager coreEntityManager = new CoreEntityManager();
-        EntityManager entityManager = coreEntityManager.create();
-        TypedQuery<Settings> query = entityManager.createQuery("SELECT s FROM Settings s where s.user_id=1", Settings.class);
-        List<Settings> settings = query.getResultList();
-        coreEntityManager.close(entityManager);
+    @Inject
+    private DBConnectionManager dbConnectionManager;
+    public Settings createOrUpdateDefaultSettings(User user) {
+        try {
+            Settings settings = null;
 
-        return settings.get(0);*/
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("mysqlResource");
-        EntityManager em = emf.createEntityManager();
+            if (settings == null) {
+                settings = new Settings();
+                settings.setTemperatureUnit(TemperatureUnit.celsius);
+                settings.setTimeZone(TimeZone.AUTO);
+                settings.setWindSpeedUnit(WindSpeedUnit.kmh);
+                settings.setPrecipitationUnit(PrecipitationUnit.mm);
+                settings.setUser(user);
 
-        TypedQuery<Settings> query = em.createQuery("SELECT s FROM Settings s where s.user_id=1", Settings.class);
-        List<Settings> settings = query.getResultList();
-        em.close();
-        emf.close();
-        return settings.get(0);
+                System.out.println("Value check: " + settings.getUser().getId().longValue());
+                try (Connection connection = dbConnectionManager.getConnection();
+                     PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO settings (temperature_unit, time_zone, wind_speed_unit, precipitation_unit, user_id) VALUES (?, ?, ?, ?, ?)")) {
+                    preparedStatement.setString(1, settings.getTemperatureUnit().name());
+                    preparedStatement.setString(2, settings.getTimeZone().name());
+                    preparedStatement.setString(3, settings.getWindSpeedUnit().name());
+                    preparedStatement.setString(4, settings.getPrecipitationUnit().name());
+                    preparedStatement.setLong(5, settings.getUser().getId().longValue());
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return settings;
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public Boolean updateCurrentUserSettings(String timeZone, String temperature, String wind, String precipitation) {
+        try {
+            try (Connection connection = dbConnectionManager.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("UPDATE settings SET temperature_unit = ?, time_zone = ?, wind_speed_unit = ?, precipitation_unit = ? WHERE user_id=?")) {
+                preparedStatement.setString(1, temperature);
+                preparedStatement.setString(2, timeZone);
+                preparedStatement.setString(3, wind);
+                preparedStatement.setString(4, precipitation);
+                preparedStatement.setLong(5, Integer.valueOf(VaadinSession.getCurrent().getAttribute("LOGGED_IN_USER_ID").toString()));
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public Settings getCurrentUserSettingsSettings() {
+        try {
+            Settings settings = null;
+            try (Connection connection = dbConnectionManager.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT temperature_unit, time_zone, wind_speed_unit, precipitation_unit FROM settings WHERE user_id = ?")) {
+                preparedStatement.setLong(1, Integer.valueOf(VaadinSession.getCurrent().getAttribute("LOGGED_IN_USER_ID").toString()));
+                ResultSet rs = preparedStatement.executeQuery();
+
+                if (rs.next()) {
+                    String temperature_unit = rs.getString("temperature_unit");
+                    String time_zone = rs.getString("time_zone");
+                    String wind_speed_unit = rs.getString("wind_speed_unit");
+                    String precipitation_unit = rs.getString("precipitation_unit");
+                    settings = new Settings();
+                    settings.setTemperatureUnit(TemperatureUnit.valueOf(temperature_unit));
+                    settings.setTimeZone(TimeZone.valueOf(time_zone));
+                    settings.setWindSpeedUnit(WindSpeedUnit.valueOf(wind_speed_unit));
+                    settings.setPrecipitationUnit(PrecipitationUnit.valueOf(precipitation_unit));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return settings;
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 }

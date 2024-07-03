@@ -4,15 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpMethod;
 import com.nashid.weatherapp.core.api.ApiClient;
 import com.nashid.weatherapp.core.api.WeatherApi;
+import com.nashid.weatherapp.domain.Settings;
 import com.nashid.weatherapp.dto.CurrentWeatherResult;
 import com.nashid.weatherapp.dto.HourlyWeatherResult;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class WeatherService {
+
+    @Inject
+    private SettingsService settingsService;
     public CurrentWeatherResult getCurrentWeather(String latitude, String longitude) {
-        //todo Dynamic from settings
-        String weatherParam = "&current=temperature_2m,wind_speed_10m,rain,weather_code&timeformat=unixtime&timezone=Asia/Dhaka&wind_speed_unit=kmh&precipitation_unit=inch";
+        Settings settings = settingsService.getCurrentUserSettingsSettings();
+        String weatherParam = "&current=temperature_2m,wind_speed_10m,rain,weather_code&timeformat=unixtime&timezone=" + settings.getTimeZone().toString() + "&wind_speed_unit=" + settings.getWindSpeedUnit().name() + "&precipitation_unit=" + settings.getPrecipitationUnit().name() + "&temperature_unit=" + settings.getTemperatureUnit().name();
         String weatherData = ApiClient.callUrl(WeatherApi.WEATHER_API_FORECAST_URL.concat("?latitude=").concat(latitude).concat("&longitude=").concat(longitude).concat(weatherParam), HttpMethod.GET);
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -27,8 +32,8 @@ public class WeatherService {
     }
 
     public HourlyWeatherResult getHourlyWeather(String latitude, String longitude) {
-        //todo Dynamic from settings
-        String weatherParam = "&forecast_days=1&hourly=temperature_2m,wind_speed_10m,rain,weather_code&timeformat=unixtime&timezone=Asia/Dhaka&wind_speed_unit=kmh&precipitation_unit=inch";
+        Settings settings = settingsService.getCurrentUserSettingsSettings();
+        String weatherParam = "&forecast_days=1&hourly=temperature_2m,wind_speed_10m,rain,weather_code&timezone=" + settings.getTimeZone().toString() + "&wind_speed_unit=" + settings.getWindSpeedUnit().name() + "&precipitation_unit=" + settings.getPrecipitationUnit().name() + "&temperature_unit=" + settings.getTemperatureUnit().name();
         String weatherData = ApiClient.callUrl(WeatherApi.WEATHER_API_FORECAST_URL.concat("?latitude=").concat(latitude).concat("&longitude=").concat(longitude).concat(weatherParam), HttpMethod.GET);
         ObjectMapper objectMapper = new ObjectMapper();
 

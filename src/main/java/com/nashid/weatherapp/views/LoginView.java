@@ -1,12 +1,15 @@
 package com.nashid.weatherapp.views;
 
 import com.nashid.weatherapp.core.notification.NotificationUtils;
+import com.nashid.weatherapp.domain.User;
+import com.nashid.weatherapp.services.UserService;
 import com.vaadin.cdi.annotation.CdiComponent;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.router.Route;
 
+import com.vaadin.flow.server.VaadinSession;
 import jakarta.inject.Inject;
 
 /**
@@ -19,7 +22,8 @@ public class LoginView extends Composite<LoginOverlay> {
     public final static String APPLICATION_NAME = "Weather Application";
     private final String APPLICATION_DESCRIPTION = "By Md Nashid Kamal";
 
-    public LoginView() {
+    @Inject
+    public LoginView(UserService userService) {
         LoginOverlay loginOverlay = getContent();
         loginOverlay.setTitle(APPLICATION_NAME);
         loginOverlay.setDescription(APPLICATION_DESCRIPTION);
@@ -29,7 +33,9 @@ public class LoginView extends Composite<LoginOverlay> {
             String username = event.getUsername();
             String password = event.getPassword();
 
-            if (username.equals("admin") && password.equals("admin")) {
+            User user = userService.checkUser(username, password);
+            if (user != null) {
+                VaadinSession.getCurrent().setAttribute("LOGGED_IN_USER_ID", user.getId());
                 UI.getCurrent().navigate("dashboard");
             }
             else {

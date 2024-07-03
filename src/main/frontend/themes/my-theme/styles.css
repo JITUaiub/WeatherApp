@@ -130,8 +130,39 @@ body {
 }
 
 /* Weather Preview */
+.weather-container {
+  font-family: 'Roboto';
+}
+
+.daily-forcast-title {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.custom-hr {
+  color: black;
+  width: 1000px;
+}
+
+.daily-forcast-temparature {
+  font-size: 48px;
+  font-weight: bold;
+}
+
 .week-forecast {
   margin-top: 20px;
-  overflow-y:scroll;
-  height: 1000px;
+  overflow-y:hidden;
+  height: 100%;
+  width: 100%;
+}
+
+.temparature {
+  font-weight: bold;
+}
+
+.hourly-forecast {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
