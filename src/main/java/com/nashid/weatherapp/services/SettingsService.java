@@ -54,6 +54,9 @@ public class SettingsService {
 
     public Boolean updateCurrentUserSettings(String timeZone, String temperature, String wind, String precipitation) {
         try {
+            if (VaadinSession.getCurrent().getAttribute("LOGGED_IN_USER_ID") == null) {
+                return false;
+            }
             try (Connection connection = dbConnectionManager.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("UPDATE settings SET temperature_unit = ?, time_zone = ?, wind_speed_unit = ?, precipitation_unit = ? WHERE user_id=?")) {
                 preparedStatement.setString(1, temperature);
@@ -76,6 +79,9 @@ public class SettingsService {
     public Settings getCurrentUserSettings() {
         try {
             Settings settings = null;
+            if (VaadinSession.getCurrent().getAttribute("LOGGED_IN_USER_ID") == null) {
+                return null;
+            }
             try (Connection connection = dbConnectionManager.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("SELECT temperature_unit, time_zone, wind_speed_unit, precipitation_unit FROM settings WHERE user_id = ?")) {
                 preparedStatement.setLong(1, Integer.valueOf(VaadinSession.getCurrent().getAttribute("LOGGED_IN_USER_ID").toString()));

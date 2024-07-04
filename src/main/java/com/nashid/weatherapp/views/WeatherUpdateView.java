@@ -1,9 +1,13 @@
 package com.nashid.weatherapp.views;
 
+import com.nashid.weatherapp.core.notification.NotificationUtils;
 import com.nashid.weatherapp.dto.HourlyWeatherResult;
 import com.nashid.weatherapp.dto.Location;
+import com.nashid.weatherapp.services.FavouriteLocationService;
 import com.nashid.weatherapp.services.WeatherService;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -25,7 +29,7 @@ public class WeatherUpdateView extends VerticalLayout implements BeforeEnterObse
     private Span currentRain;
     private Span hourlyForecast;
 
-    public WeatherUpdateView(Location location, WeatherService weatherService) {
+    public WeatherUpdateView(Location location, WeatherService weatherService, FavouriteLocationService favouriteLocationService) {
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         addClassName("weather-container");
 
@@ -47,8 +51,27 @@ public class WeatherUpdateView extends VerticalLayout implements BeforeEnterObse
         another.add(currentTemperature);
         currentWindSurface = new Span("Wind Surface : " + location.getSurfaceWind());
         another.add(currentWindSurface);
-        currentRain = new Span("Rain         : " + location.getRain());
+        currentRain = new Span("Rain : " + location.getRain());
         another.add(currentRain);
+        Long loggedUserId = Long.valueOf(VaadinSession.getCurrent().getAttribute("LOGGED_IN_USER_ID").toString());
+        Button favouriteButton = new Button("Remove", event -> {
+            if (favouriteLocationService.isLocationFavourite(loggedUserId, location.getLatitude(), location.getLongitude(), location.getLocation(), location.getCountry())) {
+                favouriteLocationService.removeFavouriteLocation(loggedUserId, location.getLatitude(), location.getLongitude(), location.getLocation(), location.getCountry());
+                NotificationUtils.showSuccessMessage("Location removed from favourite list");
+                event.getSource().setText("Add");
+            }
+            else {
+                favouriteLocationService.createFavouriteLocation(loggedUserId, location.getLatitude(), location.getLongitude(), location.getLocation(), location.getCountry());
+                NotificationUtils.showSuccessMessage("Location added to favourite list");
+                event.getSource().setText("Remove from Favourite Location");
+            }
+        });
+        favouriteButton.setIcon(VaadinIcon.HEART.create());
+        if (!favouriteLocationService.isLocationFavourite(loggedUserId, location.getLatitude(), location.getLongitude(), location.getLocation(), location.getCountry())) {
+            favouriteButton.setText("Add");
+        }
+        favouriteButton.addClassName("load-more-button");
+        another.add(favouriteButton);
         another.setAlignItems(Alignment.CENTER);
         another.setJustifyContentMode(JustifyContentMode.CENTER);
         verticalLayout.add(another);

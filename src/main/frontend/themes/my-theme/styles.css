@@ -129,6 +129,16 @@ body {
   font-size: 18px;
 }
 
+.fav-layout {
+  font-family: 'Roboto Condensed';
+  padding: 10px 60px 10px 60px;
+}
+
+.fav-label {
+  font-weight: bold;
+  font-size: 18px;
+}
+
 /* Weather Preview */
 .weather-container {
   font-family: 'Roboto';

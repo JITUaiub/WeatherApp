@@ -12,7 +12,6 @@ public class ApiClient {
         String responseData = "";
         HttpResponse<String> response = null;
         try {
-            System.out.println("Calling URL: " + apiUrl);
             if (httpMethod == HttpMethod.GET) {
                 response = Unirest.get(apiUrl)
                         .header("content-type", "application/json")

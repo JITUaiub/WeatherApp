@@ -1,6 +1,8 @@
 package com.nashid.weatherapp.views;
 
+import com.nashid.weatherapp.domain.FavouriteLocation;
 import com.nashid.weatherapp.dto.Location;
+import com.nashid.weatherapp.services.FavouriteLocationService;
 import com.nashid.weatherapp.services.LocationService;
 import com.nashid.weatherapp.services.SettingsService;
 import com.nashid.weatherapp.services.WeatherService;
@@ -47,7 +49,7 @@ public class DashboardView extends Div implements BeforeEnterObserver {
     private static Map<String, TextField> filterHeaders = new HashMap<>();
 
     @Inject
-    public DashboardView(LocationService locationService, WeatherService weatherService, SettingsService settingsService) {
+    public DashboardView(LocationService locationService, WeatherService weatherService, SettingsService settingsService, FavouriteLocationService favouriteLocationService) {
         locationService.setLocationCount(DEFAULT_LOCATION_PAGINATION_MAX);
         Span noDataLabel = new Span("Your text doesn't match with any Address, City or Zip Code");
         noDataLabel.addClassName("no-data-label");
@@ -109,6 +111,31 @@ public class DashboardView extends Div implements BeforeEnterObserver {
         Button closeButton = new Button("Close", event -> dialog.close());
         dialog.getFooter().add(closeButton);
 
+        HorizontalLayout favouriteLayout = new HorizontalLayout();
+        favouriteLayout.setVisible(false);
+        favouriteLayout.addClassName("fav-layout");
+        Span favlabel = new Span("Favourite Locations: ");
+        favlabel.addClassName("fav-label");
+        favouriteLayout.add(favlabel);
+        favouriteLocationService.getCurrentUserFavouriteLocations().forEach( favLocation -> {
+            String label = favLocation.getLocation();
+            if (favLocation.getCountry() != null || favLocation.getCountry() != "") {
+                label = label.concat(", ").concat(favLocation.getCountry());
+            }
+            Span favouriteLocation = new Span(label);
+            favouriteLocation.addClassName("clickable-link-text");
+            favouriteLocation.addClickListener(event -> {
+                dialog.removeAll();
+                WeatherUpdateView weatherUpdateView = new WeatherUpdateView(weatherService.getLocationFromFavouriteLocation(favLocation), weatherService, favouriteLocationService);
+                dialog.setHeaderTitle("Weather Forecast for " + favLocation.getLabelText());
+                dialog.add(weatherUpdateView);
+                dialog.open();
+            });
+            favouriteLayout.add(favouriteLocation);
+            favouriteLayout.setVisible(true);
+        });
+        add(favouriteLayout);
+
         Grid<Location> grid = new Grid<>(Location.class, false);
         Grid.Column<Location> locationColumn = grid.addColumn(new ComponentRenderer<>(location -> {
             Span locationLink = new Span(location.getLocation());
@@ -117,8 +144,8 @@ public class DashboardView extends Div implements BeforeEnterObserver {
             countryCodeBadge.getElement().getThemeList().add("badge primary");
             locationLink.addClickListener(event -> {
                 dialog.removeAll();
-                WeatherUpdateView weatherUpdateView = new WeatherUpdateView(location, weatherService);
-                dialog.setHeaderTitle("Weather Forecast for " + location.getLocation());
+                WeatherUpdateView weatherUpdateView = new WeatherUpdateView(location, weatherService, favouriteLocationService);
+                dialog.setHeaderTitle("Weather Forecast for " + location.getLabelText());
                 dialog.add(weatherUpdateView);
                 dialog.open();
             });

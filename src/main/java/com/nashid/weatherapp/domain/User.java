@@ -2,19 +2,13 @@ package com.nashid.weatherapp.domain;
 
 import com.nashid.weatherapp.enums.UserRole;
 
-import jakarta.persistence.*;
-
-@Entity
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String password;
     private String firstName;
     private String lastName;
 
-    @Enumerated(EnumType.STRING)
     private UserRole role;
 
     public User() {

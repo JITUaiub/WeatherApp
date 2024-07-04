@@ -94,4 +94,12 @@ public class Location {
     public String getLastUpdatedTime() {
         return weatherResult.getCurrent().getTime().replace("T", " ");
     }
+
+    public String getLabelText() {
+        String label = getLocation();
+        if (getCountry() != null || getCountry() != "") {
+            label = label.concat(", ").concat(getCountry());
+        }
+        return label;
+    }
 }

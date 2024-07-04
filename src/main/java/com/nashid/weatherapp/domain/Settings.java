@@ -5,24 +5,18 @@ import com.nashid.weatherapp.enums.TemperatureUnit;
 import com.nashid.weatherapp.enums.TimeZone;
 import com.nashid.weatherapp.enums.WindSpeedUnit;
 
-import jakarta.persistence.*;
-
-@Entity
 public class Settings {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-    @Enumerated(EnumType.STRING)
+
     private TemperatureUnit temperatureUnit;
-    @Enumerated(EnumType.STRING)
+
     private TimeZone timeZone;
-    @Enumerated(EnumType.STRING)
+
     private WindSpeedUnit windSpeedUnit;
-    @Enumerated(EnumType.STRING)
+
     private PrecipitationUnit precipitationUnit;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
     private User user;
 
     public Settings() {
