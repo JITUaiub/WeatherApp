@@ -1,5 +1,6 @@
 package com.nashid.weatherapp.services;
 
+import com.nashid.weatherapp.core.api.WeatherApi;
 import com.nashid.weatherapp.core.utils.DBConnectionManager;
 import com.nashid.weatherapp.domain.Settings;
 import com.nashid.weatherapp.domain.User;
@@ -72,12 +73,43 @@ public class SettingsService {
         return true;
     }
 
-    public Settings getCurrentUserSettingsSettings() {
+    public Settings getCurrentUserSettings() {
         try {
             Settings settings = null;
             try (Connection connection = dbConnectionManager.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("SELECT temperature_unit, time_zone, wind_speed_unit, precipitation_unit FROM settings WHERE user_id = ?")) {
                 preparedStatement.setLong(1, Integer.valueOf(VaadinSession.getCurrent().getAttribute("LOGGED_IN_USER_ID").toString()));
+                ResultSet rs = preparedStatement.executeQuery();
+
+                if (rs.next()) {
+                    String temperature_unit = rs.getString("temperature_unit");
+                    String time_zone = rs.getString("time_zone");
+                    String wind_speed_unit = rs.getString("wind_speed_unit");
+                    String precipitation_unit = rs.getString("precipitation_unit");
+                    settings = new Settings();
+                    settings.setTemperatureUnit(TemperatureUnit.valueOf(temperature_unit));
+                    settings.setTimeZone(TimeZone.valueOf(time_zone));
+                    settings.setWindSpeedUnit(WindSpeedUnit.valueOf(wind_speed_unit));
+                    settings.setPrecipitationUnit(PrecipitationUnit.valueOf(precipitation_unit));
+                    WeatherApi.DEFAULT_TIMEZONE = settings.getTimeZone().toString();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return settings;
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public Settings getUserSettings(User user) {
+        try {
+            Settings settings = null;
+            try (Connection connection = dbConnectionManager.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT temperature_unit, time_zone, wind_speed_unit, precipitation_unit FROM settings WHERE user_id = ?")) {
+                preparedStatement.setLong(1, user.getId());
                 ResultSet rs = preparedStatement.executeQuery();
 
                 if (rs.next()) {

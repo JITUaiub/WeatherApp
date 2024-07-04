@@ -6,12 +6,11 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.nashid.weatherapp.core.api.WeatherApi;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.time.*;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class UnixTimestampListDeserializer extends JsonDeserializer<List<Date>> {
@@ -21,8 +20,12 @@ public class UnixTimestampListDeserializer extends JsonDeserializer<List<Date>> 
         List<Date> finalList = new ArrayList<>();
         JsonNode jsonNode = jsonParser.getCodec().readTree(jsonParser);
         for (JsonNode timeNode : jsonNode) {
-            finalList.add(new Date(TimeUnit.SECONDS.toMillis(Long.valueOf(timeNode.asLong()))));
+            Instant instant = Instant.ofEpochSecond(timeNode.asLong());
+            ZoneId zoneId = ZoneId.of(WeatherApi.DEFAULT_TIMEZONE);
+            ZonedDateTime zonedDateTime = instant.atZone(zoneId);
+            finalList.add(Date.from(zonedDateTime.toInstant()));
         }
+        Collections.sort(finalList);
         return finalList;
     }
 }

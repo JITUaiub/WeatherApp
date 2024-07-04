@@ -1,24 +1,19 @@
 package com.nashid.weatherapp.services;
 
+import com.nashid.weatherapp.core.api.WeatherApi;
 import com.nashid.weatherapp.core.utils.DBConnectionManager;
 import com.nashid.weatherapp.domain.Settings;
 import com.nashid.weatherapp.domain.User;
 import com.nashid.weatherapp.enums.UserRole;
-import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
-import java.util.List;
 
 @ApplicationScoped
 public class UserService {
@@ -32,6 +27,7 @@ public class UserService {
     public User createImplementerLogin() {
         try {
             User user = null;
+            Settings settings = null;
             try (Connection connection = dbConnectionManager.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, username, password, first_name, last_name, role FROM user WHERE id = ?")) {
                 preparedStatement.setInt(1, 1);
@@ -69,8 +65,12 @@ public class UserService {
                     e.printStackTrace();
                 }
 
-                settingsService.createOrUpdateDefaultSettings(user);
+                settings = settingsService.createOrUpdateDefaultSettings(user);
             }
+            else {
+                settings = settingsService.getUserSettings(user);
+            }
+            WeatherApi.DEFAULT_TIMEZONE = settings.getTimeZone().toString();
             return user;
         }
         catch (Exception ex) {

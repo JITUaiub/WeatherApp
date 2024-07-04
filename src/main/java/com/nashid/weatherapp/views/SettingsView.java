@@ -14,7 +14,6 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.server.VaadinSession;
-import jakarta.inject.Inject;
 
 public class SettingsView extends Dialog implements BeforeEnterObserver {
 
@@ -31,7 +30,7 @@ public class SettingsView extends Dialog implements BeforeEnterObserver {
         getFooter().add(saveButton);
         getFooter().add(closeButton);
 
-        Settings settings = settingsService.getCurrentUserSettingsSettings();
+        Settings settings = settingsService.getCurrentUserSettings();
 
         VerticalLayout verticalLayout = new VerticalLayout();
         Select<TimeZone> timeZoneSelect = new Select<>();

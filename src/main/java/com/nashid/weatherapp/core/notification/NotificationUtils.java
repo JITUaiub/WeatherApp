@@ -24,6 +24,7 @@ public class NotificationUtils {
         });
         HorizontalLayout layout = new HorizontalLayout(text, closeButton);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
+        notification.setDuration(2000);
         notification.add(layout);
         notification.open();
     }

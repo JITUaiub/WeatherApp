@@ -9,7 +9,6 @@ public enum TimeZone {
     America_Sao_Paulo("America/Sao_Paulo", "America/Sao_Paulo"),
     UTC("UTC", "Not set (GMT+0)"),
     GMT("GMT", "GMT+0"),
-    AUTO("auto", "Automatically detect time zone"),
     Europe_London("Europe/London", "Europe/London"),
     Europe_Berlin("Europe/Berlin", "Europe/Berlin"),
     Europe_Moscow("Europe/Moscow", "Europe/Moscow"),

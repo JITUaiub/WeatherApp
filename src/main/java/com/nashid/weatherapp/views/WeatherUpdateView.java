@@ -11,10 +11,11 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.server.VaadinSession;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class WeatherUpdateView extends VerticalLayout implements BeforeEnterObserver {
     private Image weatherCode;
@@ -70,7 +71,10 @@ public class WeatherUpdateView extends VerticalLayout implements BeforeEnterObse
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
         for (int i=0; i<hourlyWeatherResult.getHourly().getTime().size(); i++) {
             Map hourly = new HashMap();
-            hourly.put("time", simpleDateFormat.format(hourlyWeatherResult.getHourly().getTime().get(i)));
+            Date d = new Date();
+            d.setHours(i);
+            d.setMinutes(0);
+            hourly.put("time", simpleDateFormat.format(d));
             hourly.put("weatherTitle", getWeatherCodeAsTitle(hourlyWeatherResult.getHourly().getWeather_code().get(i)));
             hourly.put("weatherIconUrl", getWeatherCodeAsIconUrl(hourlyWeatherResult.getHourly().getWeather_code().get(i), "50"));
             hourly.put("temperature", hourlyWeatherResult.getHourly().getTemperature_2m().get(i).toString().concat(" ").concat(hourlyWeatherResult.getHourly_units().getTemperature_2m()));
