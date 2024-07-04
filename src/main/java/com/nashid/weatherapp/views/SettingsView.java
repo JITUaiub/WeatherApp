@@ -23,7 +23,9 @@ public class SettingsView extends Dialog implements BeforeEnterObserver {
         setHeight("400px");
 
         Button saveButton = new Button("Save");
+        saveButton.addClassName("action-button");
         Button closeButton = new Button("Close");
+        closeButton.addClassName("action-button");
         closeButton.addClickListener(buttonClickEvent -> {
             close();
         });
@@ -37,22 +39,27 @@ public class SettingsView extends Dialog implements BeforeEnterObserver {
         timeZoneSelect.setLabel("Time Zone:");
         timeZoneSelect.setItems(TimeZone.values());
         timeZoneSelect.setValue(settings.getTimeZone());
+        timeZoneSelect.addClassName("grid-item");
         verticalLayout.add(timeZoneSelect);
         Select<TemperatureUnit> temperatureUnitSelect = new Select<>();
         temperatureUnitSelect.setLabel("Temperature Unit:");
         temperatureUnitSelect.setItems(TemperatureUnit.values());
         temperatureUnitSelect.setValue(settings.getTemperatureUnit());
+        temperatureUnitSelect.addClassName("grid-item");
         verticalLayout.add(temperatureUnitSelect);
         Select<WindSpeedUnit> windSpeedUnitSelect = new Select<>();
         windSpeedUnitSelect.setLabel("Wind Speed Unit:");
         windSpeedUnitSelect.setItems(WindSpeedUnit.values());
         windSpeedUnitSelect.setValue(settings.getWindSpeedUnit());
+        windSpeedUnitSelect.addClassName("grid-item");
         verticalLayout.add(windSpeedUnitSelect);
         Select<PrecipitationUnit> precipitationUnitSelect = new Select<>();
         precipitationUnitSelect.setLabel("Precipitation Unit:");
         precipitationUnitSelect.setItems(PrecipitationUnit.values());
         precipitationUnitSelect.setValue(settings.getPrecipitationUnit());
+        precipitationUnitSelect.addClassName("grid-item");
         verticalLayout.add(precipitationUnitSelect);
+        verticalLayout.addClassName("grid-container");
         add(verticalLayout);
 
         saveButton.addClickListener(buttonClickEvent -> {

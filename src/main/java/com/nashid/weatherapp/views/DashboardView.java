@@ -109,6 +109,7 @@ public class DashboardView extends Div implements BeforeEnterObserver {
         dialog.setHeight("800px");
 
         Button closeButton = new Button("Close", event -> dialog.close());
+        closeButton.addClassName("action-button");
         dialog.getFooter().add(closeButton);
 
         HorizontalLayout favouriteLayout = new HorizontalLayout();

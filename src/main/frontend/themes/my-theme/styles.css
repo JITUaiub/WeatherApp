@@ -36,6 +36,12 @@
   color: #FFFFFF;
 }
 
+.action-button {
+  width: 50px;
+  background-color: #2396F3;
+  color: #FFFFFF;
+}
+
 .pagination-view {
   display: flex;
   align-items: center;
@@ -125,13 +131,14 @@ body {
   color: #3c91e6;
   cursor: pointer;
   text-decoration: underline;
-  margin-left: 10px;
+  margin-left: -5px;
   font-size: 18px;
 }
 
 .fav-layout {
   font-family: 'Roboto Condensed';
   padding: 10px 60px 10px 60px;
+  margin-left: 10px;
 }
 
 .fav-label {
@@ -141,7 +148,7 @@ body {
 
 /* Weather Preview */
 .weather-container {
-  font-family: 'Roboto';
+  font-family: 'Roboto Condensed';
 }
 
 .daily-forcast-title {
@@ -174,5 +181,20 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+}
+
+/*Settings */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  width: 80%;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+.grid-item {
+  padding: 10px;
   text-align: center;
 }

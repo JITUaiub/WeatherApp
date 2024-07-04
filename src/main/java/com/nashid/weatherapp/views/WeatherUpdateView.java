@@ -99,7 +99,7 @@ public class WeatherUpdateView extends VerticalLayout implements BeforeEnterObse
             d.setMinutes(0);
             hourly.put("time", simpleDateFormat.format(d));
             hourly.put("weatherTitle", getWeatherCodeAsTitle(hourlyWeatherResult.getHourly().getWeather_code().get(i)));
-            hourly.put("weatherIconUrl", getWeatherCodeAsIconUrl(hourlyWeatherResult.getHourly().getWeather_code().get(i), "50"));
+            hourly.put("weatherIconUrl", getWeatherCodeAsIconUrl(hourlyWeatherResult.getHourly().getWeather_code().get(i), "150"));
             hourly.put("temperature", hourlyWeatherResult.getHourly().getTemperature_2m().get(i).toString().concat(" ").concat(hourlyWeatherResult.getHourly_units().getTemperature_2m()));
             hourly.put("surfaceWind", hourlyWeatherResult.getHourly().getWind_speed_10m().get(i).toString().concat(" ").concat(hourlyWeatherResult.getHourly_units().getWind_speed_10m()));
             hourly.put("rain", hourlyWeatherResult.getHourly().getRain().get(i).toString().concat(" ").concat(hourlyWeatherResult.getHourly_units().getRain()));
