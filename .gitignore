@@ -4,6 +4,7 @@
 .project
 .classpath
 /src/main/webapp/frontend-es*/
+/src/main/bundles/
 
 *.iml
 .DS_Store
