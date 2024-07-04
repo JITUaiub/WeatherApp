@@ -11,14 +11,11 @@ import java.time.*;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class UnixTimestampDeserializer extends JsonDeserializer<Date> {
+public class UnixTimestampDeserializer extends JsonDeserializer<String> {
 
     @Override
-    public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
+    public String deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
         String unixTimestamp = jsonParser.getText().trim();
-        Instant instant = Instant.ofEpochSecond(Long.valueOf(unixTimestamp));
-        ZoneId zoneId = ZoneId.of(WeatherApi.DEFAULT_TIMEZONE);
-        ZonedDateTime zonedDateTime = instant.atZone(zoneId);
-        return Date.from(zonedDateTime.toInstant());
+        return unixTimestamp;
     }
 }

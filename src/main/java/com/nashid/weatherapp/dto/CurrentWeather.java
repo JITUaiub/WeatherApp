@@ -10,7 +10,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CurrentWeather {
     @JsonDeserialize(using = UnixTimestampDeserializer.class)
-    private Date time;
+    private String time;
     private Double temperature_2m;
     private Double wind_speed_10m;
     private Double rain;
@@ -19,7 +19,7 @@ public class CurrentWeather {
     public CurrentWeather() {
     }
 
-    public CurrentWeather(Integer weather_code, Date time, Double temperature_2m, Double wind_speed_10m, Double rain) {
+    public CurrentWeather(Integer weather_code, String time, Double temperature_2m, Double wind_speed_10m, Double rain) {
         this.weather_code = weather_code;
         this.time = time;
         this.temperature_2m = temperature_2m;
@@ -51,11 +51,11 @@ public class CurrentWeather {
         this.rain = rain;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

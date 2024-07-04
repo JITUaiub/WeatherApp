@@ -17,7 +17,7 @@ public class WeatherService {
     private SettingsService settingsService;
     public CurrentWeatherResult getCurrentWeather(String latitude, String longitude) {
         Settings settings = settingsService.getCurrentUserSettings();
-        String weatherParam = "&current=temperature_2m,wind_speed_10m,rain,weather_code&timeformat=unixtime&timezone=" + settings.getTimeZone().toString() + "&wind_speed_unit=" + settings.getWindSpeedUnit().name() + "&precipitation_unit=" + settings.getPrecipitationUnit().name() + "&temperature_unit=" + settings.getTemperatureUnit().name();
+        String weatherParam = "&current=temperature_2m,wind_speed_10m,rain,weather_code&timeformat=iso8601&timezone=" + settings.getTimeZone().toString() + "&wind_speed_unit=" + settings.getWindSpeedUnit().name() + "&precipitation_unit=" + settings.getPrecipitationUnit().name() + "&temperature_unit=" + settings.getTemperatureUnit().name();
         String weatherData = ApiClient.callUrl(WeatherApi.WEATHER_API_FORECAST_URL.concat("?latitude=").concat(latitude).concat("&longitude=").concat(longitude).concat(weatherParam), HttpMethod.GET);
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -33,7 +33,7 @@ public class WeatherService {
 
     public HourlyWeatherResult getHourlyWeather(String latitude, String longitude) {
         Settings settings = settingsService.getCurrentUserSettings();
-        String weatherParam = "&forecast_days=1&hourly=temperature_2m,wind_speed_10m,rain,weather_code&timeformat=unixtime&timezone=" + settings.getTimeZone().toString() + "&wind_speed_unit=" + settings.getWindSpeedUnit().name() + "&precipitation_unit=" + settings.getPrecipitationUnit().name() + "&temperature_unit=" + settings.getTemperatureUnit().name();
+        String weatherParam = "&forecast_days=1&hourly=temperature_2m,wind_speed_10m,rain,weather_code&timeformat=iso8601&timezone=" + settings.getTimeZone().toString() + "&wind_speed_unit=" + settings.getWindSpeedUnit().name() + "&precipitation_unit=" + settings.getPrecipitationUnit().name() + "&temperature_unit=" + settings.getTemperatureUnit().name();
         String weatherData = ApiClient.callUrl(WeatherApi.WEATHER_API_FORECAST_URL.concat("?latitude=").concat(latitude).concat("&longitude=").concat(longitude).concat(weatherParam), HttpMethod.GET);
         ObjectMapper objectMapper = new ObjectMapper();
 

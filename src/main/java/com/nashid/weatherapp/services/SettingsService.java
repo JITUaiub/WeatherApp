@@ -26,7 +26,7 @@ public class SettingsService {
             if (settings == null) {
                 settings = new Settings();
                 settings.setTemperatureUnit(TemperatureUnit.celsius);
-                settings.setTimeZone(TimeZone.AUTO);
+                settings.setTimeZone(TimeZone.UTC);
                 settings.setWindSpeedUnit(WindSpeedUnit.kmh);
                 settings.setPrecipitationUnit(PrecipitationUnit.mm);
                 settings.setUser(user);

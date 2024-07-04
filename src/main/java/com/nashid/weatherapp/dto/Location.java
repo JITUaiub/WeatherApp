@@ -92,6 +92,6 @@ public class Location {
     }
 
     public String getLastUpdatedTime() {
-        return new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(weatherResult.getCurrent().getTime());
+        return weatherResult.getCurrent().getTime().replace("T", " ");
     }
 }
