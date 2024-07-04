@@ -64,7 +64,7 @@ public class WeatherUpdateView extends VerticalLayout implements BeforeEnterObse
             else {
                 favouriteLocationService.createFavouriteLocation(loggedUserId, location.getLatitude(), location.getLongitude(), location.getLocation(), location.getCountry());
                 NotificationUtils.showSuccessMessage("Location added to favourite list");
-                event.getSource().setText("Remove from Favourite Location");
+                event.getSource().setText("Remove");
             }
         });
         favouriteButton.setIcon(VaadinIcon.HEART.create());
