@@ -5,6 +5,7 @@ import com.nashid.weatherapp.dto.HourlyWeatherResult;
 import com.nashid.weatherapp.dto.Location;
 import com.nashid.weatherapp.services.FavouriteLocationService;
 import com.nashid.weatherapp.services.WeatherService;
+import com.nashid.weatherapp.views.graph.WeatherHourlyGraph;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -77,7 +78,6 @@ public class WeatherUpdateView extends VerticalLayout implements BeforeEnterObse
         verticalLayout.add(another);
         add(verticalLayout);
 
-
         //Hourly Forecast
         VerticalLayout verticalLayout1 = new VerticalLayout();
         hourlyForecast = new Span("Hourly Forecast");
@@ -86,7 +86,6 @@ public class WeatherUpdateView extends VerticalLayout implements BeforeEnterObse
         Hr hr2 = new Hr();
         hr2.setClassName("custom-hr");
         verticalLayout1.add(hr2);
-
 
         // 5-day forecast
         HourlyWeatherResult hourlyWeatherResult = weatherService.getHourlyWeather(location.getLatitude(), location.getLongitude());
@@ -103,11 +102,17 @@ public class WeatherUpdateView extends VerticalLayout implements BeforeEnterObse
             hourly.put("temperature", hourlyWeatherResult.getHourly().getTemperature_2m().get(i).toString().concat(" ").concat(hourlyWeatherResult.getHourly_units().getTemperature_2m()));
             hourly.put("surfaceWind", hourlyWeatherResult.getHourly().getWind_speed_10m().get(i).toString().concat(" ").concat(hourlyWeatherResult.getHourly_units().getWind_speed_10m()));
             hourly.put("rain", hourlyWeatherResult.getHourly().getRain().get(i).toString().concat(" ").concat(hourlyWeatherResult.getHourly_units().getRain()));
+            hourly.put("tempRaw", hourlyWeatherResult.getHourly().getTemperature_2m().get(i).toString());
+            hourly.put("windRaw", hourlyWeatherResult.getHourly().getWind_speed_10m().get(i).toString());
+            hourly.put("rainRaw", hourlyWeatherResult.getHourly().getRain().get(i).toString());
             hourlyForecast.add(hourly);
         }
 
-        VerticalLayout weekForecastLayout = new VerticalLayout();
+        // Graph
+        WeatherHourlyGraph weatherHourlyGraph = new WeatherHourlyGraph(hourlyForecast, weatherService);
+        verticalLayout1.add(weatherHourlyGraph);
 
+        VerticalLayout weekForecastLayout = new VerticalLayout();
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         for (Map forecast : hourlyForecast) {

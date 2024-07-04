@@ -1,12 +1,5 @@
 # Weather Application
-
-This is the job interview task for software developer position
-
-## What to do
-* Fork the repository
-* After work is done, make a pull request and notify me by email
-
-## Task description
+## Requirements:
 You need to use the Weather API provided here https://open-meteo.com/en to make the weather application. 
 1. Call the API to get the locations by city name. Make the paging available with 10 items per page and a filter to filter by location name.
 2. When clicked on the location it should show the weather forecast for the location with the temperature, surface wind and rain hourly. The interface should let you first see the daily forecast and when clicked it then should show the forecast hourly for the day you selected.
@@ -16,13 +9,21 @@ You need to use the Weather API provided here https://open-meteo.com/en to make 
 
 All the other specific requirements are up to you
 
-## Technical requirements
-* Use  Vaadin (https://vaadin.com/) framework for the frontend. For chart you may use some different framework
-* For backend use Java EE
-* Use any database (Postgres, Oracle, etc.)
-* Make a Maven project
+## Technology used to develop this application:
+* Frontend: Vaadin Flow 24.0 and CDI 15.0
+* Backend: Jakarta EE 10.0.0
+* Database: MySql
+* Project Build System: Maven
+* For database connection: JDBC
+* Charts: Apex Chart addons for Vaadin Flow
+* Application Server: Tom EE 10.0.0-M1
 
-## Main points
+## Prerequisite:
+* JDK-17
+* MySql Server(I used Xampp > Mysql Module)(Download: https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/8.0.30/xampp-windows-x64-8.0.30-0-VS16-installer.exe)
+* Maven (Download: https://dlcdn.apache.org/maven/maven-3/3.9.8/binaries/apache-maven-3.9.8-bin.zip)
+
+## Before running application:
 * Structure your code
 * Use best practises
 * Use naming conventions

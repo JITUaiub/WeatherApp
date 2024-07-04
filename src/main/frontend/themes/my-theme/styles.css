@@ -158,7 +158,7 @@ body {
 
 .custom-hr {
   color: black;
-  width: 1000px;
+  width: 1070px;
 }
 
 .daily-forcast-temparature {
@@ -197,4 +197,13 @@ body {
 .grid-item {
   padding: 10px;
   text-align: center;
+}
+
+/* Chart */
+.chart-container-class {
+  height: 400px;
+}
+
+#chart-container {
+  width: 1065px;
 }

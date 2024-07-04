@@ -71,4 +71,8 @@ public class WeatherService {
         }
         return null;
     }
+
+    public Settings getCurrentUserSettings() {
+        return settingsService.getCurrentUserSettings();
+    }
 }
